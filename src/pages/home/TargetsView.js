@@ -17,6 +17,9 @@ import { useHistory } from 'react-router';
 
 export const TargetsView = (props) => {
 
+
+    const { blockUI } = useUI();
+
     const style = HomeStyles();
 
     const [targets, setTargets] = useState([]);
@@ -25,7 +28,7 @@ export const TargetsView = (props) => {
 
     const rickAndMortyService = new RickAndMortyService();
 
-    const [viewPage, setViewPage] = useState(parseInt(props.page));
+    const [viewPage, setViewPage] = useState(1);
     
     const numberPages = parseInt(localStorage.getItem(`${props.type}NumberPages`));
 
@@ -41,7 +44,6 @@ export const TargetsView = (props) => {
                 keysLS[i] !== 'deadNumberPages'    &&
                 keysLS[i] !== 'unknownNumberPages' &&
                 keysLS[i] !== 'targetsAllNumberPages'){
-                console.log(keysLS[i])
                     global = [
                         ...global,
                         ...JSON.parse(localStorage.getItem(keysLS[i]))
@@ -129,10 +131,12 @@ export const TargetsView = (props) => {
 
     const getEpisodes = async(element)=>{
         try {
+            blockUI.current.open(true);
             const {data: datos} = await rickAndMortyService.episodes(element);
+            blockUI.current.open(false);
             return datos;
         } catch (error) {
-            console.log('error');
+            blockUI.current.open(false);
         }
     }
 
@@ -144,8 +148,6 @@ export const TargetsView = (props) => {
 
     useEffect(() => {
         setTargets(props.targetsAvailables);
-        setViewPage(parseInt(props.page));
-        console.log('cambio el page', parseInt(props.page));
     }, [props.targetsAvailables, props.page]);
 
     return (
@@ -193,10 +195,14 @@ export const TargetsView = (props) => {
                     ))
                 }
             </Grid>
-
-            <Grid container className={style.wrapperPaginator}>
-                <Pagination onChange={handleChangePagination} count={numberPages} defaultPage={viewPage} color="secondary" size="large" />
-            </Grid>
+            
+            {
+                (history.location.pathname !== '/home/favorite')
+                    &&
+                        <Grid container className={style.wrapperPaginator}>
+                            <Pagination onChange={handleChangePagination} count={numberPages} defaultPage={viewPage} color="secondary" size="large" />
+                        </Grid>
+            }
 
             <Modal
                 className={style.modalDetailWrapper}

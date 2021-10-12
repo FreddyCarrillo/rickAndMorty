@@ -16,8 +16,6 @@ import StarIcon from '@mui/icons-material/Star';
 
 const Dashboard = (props) => {
 
-    console.log(props);
-    // const page = 1;
     const [page, setPage] = useState(1);
     const style = HomeStyles();
     const { blockUI } = useUI();
@@ -36,8 +34,9 @@ const Dashboard = (props) => {
 
     const getDataTabList = async () => {
         try {
+            
             blockUI.current.open(true);
-            let characters;
+
             if (typeof localStorage.getItem(valueTab) === 'string'){
 
                 let tempExt = [];
@@ -146,9 +145,8 @@ const Dashboard = (props) => {
 
         // other
         
-        let valueTab;
         if(props.tab){
-            valueTab = 'favorites';
+            setValueTab('favorites');
             let setearFavorites = [];
 
             if (localStorage.getItem('favoritesGlobal')){
@@ -164,14 +162,12 @@ const Dashboard = (props) => {
             
         }
         else if (props.history?.location.state){
-            console.log('entro aqui tab other');
             setPage(parseInt(props.history.location.state.page));
             // valueTab = 
             setValueTab(props.history.location.state.tab);
             getDataTabList();
         }
         else{
-            console.log('entro aqui tab default');
             setPage(1);
             // valueTab = 'targetsAll';
             setValueTab('targetsAll');
