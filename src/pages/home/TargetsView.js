@@ -28,7 +28,7 @@ export const TargetsView = (props) => {
 
     const rickAndMortyService = new RickAndMortyService();
 
-    const [viewPage, setViewPage] = useState(1);
+    const [viewPage, setViewPage] = useState(parseInt(history.location.state?.page) || 1);
     
     const numberPages = parseInt(localStorage.getItem(`${props.type}NumberPages`));
 
