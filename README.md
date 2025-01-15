@@ -2,6 +2,8 @@
 
 #### To start project first run the following commands:
 
+`nvm use 16`
+
 `npm install`
 
 `npm start`
